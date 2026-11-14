@@ -1,0 +1,1 @@
+{"name":"ai-health-cigar","private":true,"type":"module","scripts":{"start":"node --use-env-proxy server.mjs","test":"node --test"},"engines":{"node":">=24"}}
