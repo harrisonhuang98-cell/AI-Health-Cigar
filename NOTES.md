@@ -5,7 +5,7 @@ After each save point, push it to GitHub.
 ## Run
 One command: `node --use-env-proxy server.mjs`
 Open http://127.0.0.1:3000 in your browser. Node 24 or newer. No installation required.
-OpenAI model: gpt-5.6-luna. Key stays in .env on the server.
+OpenAI model: gpt-5.6-luna. Local startup loads .env; online the API reads only the server environment variable OPENAI_API_KEY.
 Saves on this computer only for now
 
 ## Done
@@ -16,7 +16,7 @@ Saves on this computer only for now
 - MVP 4: brief instructions sent with every request, with reviewed CDC facts and medical safety limits.
 - All persistence: public/storage.js. OpenAI connection: ask-ai.mjs.
 - Fictional examples are separate from records. Chat is session-only; recent conversation is sent to OpenAI on explicit request, with store:false (not a promise of zero provider retention).
-- No physical hardware, nicotine, smoke, heating, vapor, microphone or cloud database. Server binds to this computer only.
+- No physical hardware, nicotine, smoke, heating, vapor, microphone or cloud database. The local launcher binds to this computer only; Vercel hosts the online API.
 
 ## Check / short video
 1. Confirm 18+, describe a craving and click Ask AI. Show Thinking… and the coping answer; ask a follow-up.
@@ -46,3 +46,22 @@ The CDC link is included now as basic safety guidance. Other later features rema
 - HTTP page returns 200; /.env returns 404; .env remains Git-ignored. Syntax checks pass.
 - Browser contains one explicitly fictional test log and a demo start date; no real participant data was used.
 - OpenAI endpoint verified against official documentation: https://developers.openai.com/api/reference/resources/responses/methods/create
+
+## Put online with Vercel
+1. In Vercel, choose Add New Project and import the AI-Health-Cigar GitHub repository.
+2. Use the repository root and Framework Preset Other. vercel.json supplies the empty build command and public output folder; no install or build step is needed. Node 24.x is declared in package.json.
+3. Add OPENAI_API_KEY in Vercel Environment Variables for Production (and Preview if you want preview deployments to answer). Enter it only in Vercel, never in GitHub or browser code. No other environment variables are required.
+4. Deploy. If you add or change the key afterward, redeploy so the function receives the new value.
+5. Open the deployed URL, confirm 18+, and ask a fictional craving question. Check logging and refresh on that URL as well.
+
+Vercel serves public/ and runs api/chat.js as /api/chat. Local startup calls that same handler. The function includes BRIEF.md and NOTES.md for instructions and model selection; those files are not public assets. .env stays Git-ignored and is explicitly excluded from Vercel uploads by .vercelignore. Never upload .env manually.
+Browser storage is unchanged. Online records are separate from localhost records and belong to each browser/profile and site URL; they do not sync across computers or preview URLs.
+No database, domain, extra API key, or additional environment setting is required. The 60-second function limit is configured in vercel.json; the upstream request times out after 55 seconds.
+For a limited student demo, consider Vercel Deployment Protection. The app has no user authentication or durable abuse limiter; same-origin validation is not authentication and public requests can incur OpenAI costs. Do not treat the former single-process busy flag as a serverless rate limit.
+Prepared for deployment, not deployed or tested on Vercel in this chat.
+Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/docs/project-configuration/vercel-json
+
+## Vercel preparation checks
+- Shared Vercel/local handler: three automated tests pass, including hosted-origin requests, server environment credentials, invalid input and friendly provider failures.
+- Updated local server: page HTTP 200, /.env HTTP 404, real AI coping response HTTP 200 using fictional input. No key printed.
+- localStorage implementation unchanged; persistence tests still pass.
