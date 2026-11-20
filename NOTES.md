@@ -84,3 +84,9 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - All five automated tests pass, including request validation, key expiry/cache, one-time invalid-key refresh and browser persistence. Existing journal and smoke-free date were left unchanged. .env remains Git-ignored; no credentials were printed.
 - Try it in two steps: (1) Run node --use-env-proxy server.mjs and open http://127.0.0.1:3000. (2) Confirm adult support, type a fictional craving such as wanting to smoke after a stressful day, and click Ask AI; wait for the coping idea.
 - This confirms the local craving-to-answer flow, not medical effectiveness or a deployed Vercel site.
+
+## Respectful conversation style
+- The AI now uses natural, everyday language and short paragraphs, like a thoughtful friend discussing cravings. It acknowledges the person's situation, avoids judgment and lectures, and offers one or two manageable ideas.
+- It remains honest that it is AI, never claims personal addiction experience or a real friendship, and retains all existing health safety limits.
+- Verified with a real fictional setback/craving request: the answer was supportive and conversational, without a repeated AI introduction or routine treatment lecture. AI wording varies between replies.
+- All five automated tests and syntax checks pass. Browser saving, request validation, server-only credentials and bounded key refresh remain working.
