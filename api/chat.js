@@ -19,6 +19,6 @@ export default async function chat(req, res) {
     const { adult, messages } = body ?? {};
     if (adult !== true || !Array.isArray(messages) || !messages.length || messages.length > 12 || messages.at(-1)?.role !== 'user' || messages.some(m => !m || !['user','assistant'].includes(m.role) || typeof m.content !== 'string' || !m.content.trim() || m.content.length > 4000)) return json(400, { error: 'Confirm you are 18 or older and enter a short message.' });
     try { return json(200, { reply: await askAI(messages.map(({role,content}) => ({role,content}))) }); }
-    catch { return json(502, { error: 'I couldn’t connect to the AI. Please try again shortly. The site owner can check the server’s key-service settings and internet connection. For quitting support, visit https://www.cdc.gov/tobacco/about/how-to-quit.html' }); }
+    catch (error) { return json(502, { error: error.publicMessage || 'I couldn’t connect to the AI. Please try again shortly. The site owner can check the server’s key-service settings and internet connection. For quitting support, visit https://www.cdc.gov/tobacco/about/how-to-quit.html' }); }
   } catch { return json(400, { error: 'Please send a valid, short message.' }); }
 }

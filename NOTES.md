@@ -66,11 +66,13 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - Updated local server: page HTTP 200, /.env HTTP 404, real AI coping response HTTP 200 using fictional input. No key printed.
 - localStorage implementation unchanged; persistence tests still pass.
 
-## Server-only key service
-- get-key.mjs exports getKey(). Each AI request retrieves its key on the server; there is no OPENAI_API_KEY fallback and no key is returned to the browser.
-- KEYGEN_URL must be a direct HTTPS endpoint accepting GET with Authorization: Bearer <KEYGEN_TOKEN>. Its JSON response must contain a nonempty key, apiKey or api_key string. Redirects are blocked to protect the token. Confirm this contract with your key-service provider.
-- Local startup loads the ignored .env; Vercel invokes api/chat.js without reading any .env file. Set KEYGEN_URL and KEYGEN_TOKEN in Vercel and redeploy after changes.
-- Vercel settings: repository root, Framework Preset Other, public output directory, Node 24.x. vercel.json and package.json declare these; leave build-command overrides empty. No additional environment variables, database or browser-storage migration are needed.
-- Browser saving remains localStorage; each browser and deployed site address has separate records.
-- Key-service failures return a generic message; provider response bodies, tokens and AI keys are never logged or sent to the browser.
-- Current verification: local page HTTP 200; /.env and /get-key.mjs HTTP 404. AI endpoint returns a friendly HTTP 502 because the configured key-service URL redirects to an HTML page on minddo.ai, not a JSON key response. With user approval, the destination was inspected without forwarding the token. A real AI answer is NOT verified. Update the ignored local .env and Vercel KEYGEN_URL with the actual direct key endpoint; confirm its authentication and response contract with the provider. Never paste the token or AI key into chat or GitHub.
+## Server-only MindDo key service
+- The AI key comes from getKey() in get-key.mjs. Only server code imports it.
+- Local .env contains KEYGEN_URL=paste-here and KEYGEN_TOKEN=paste-here. Replace these privately with your MindDo base URL and token. The template replaced the previous local values as requested; .env remains ignored by Git and Vercel.
+- getKey() sends POST to KEYGEN_URL + /api/lookup-key with Authorization: Bearer KEYGEN_TOKEN. It expects JSON with apiKey and expiresAt (ISO date, Unix seconds, or Unix milliseconds).
+- The key stays in server memory until expiry. Concurrent lookups share a request. An OpenAI 401 discards the key and permits one new lookup and one retry; another rejection clears the key and stops. Other failures are not retried.
+- MindDo error.message is shown as plain text; error.fix is logged only on the server. Known credential values are redacted. Tokens, keys and provider response bodies are never printed or returned to the page.
+- HTTPS is required and redirects are blocked to avoid forwarding credentials elsewhere. No extra Node packages are needed.
+- Online, set only KEYGEN_URL and KEYGEN_TOKEN in Vercel and redeploy. Keep Framework Preset Other, Node 24.x, repository root and the public output folder configured by the project. No additional environment variables are required.
+- Browser localStorage remains unchanged. Cache is per server process/function instance; it is not a shared database.
+- Tests use fictional credentials; no live MindDo/OpenAI call was made because .env now contains placeholders.

@@ -35,9 +35,9 @@ $('chat-form').addEventListener('submit', async e => {
   try {
     const recent = [...messages.slice(-10), { role: 'user', content }];
     const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: recent, adult: $('adult').checked }), signal: AbortSignal.timeout(70000) });
-    const data = await response.json(); if (!response.ok) throw new Error(data.error);
+    const data = await response.json(); if (!response.ok) throw Object.assign(new Error(data.error), { fromServer: true });
     bubble('assistant', data.reply); messages.push({ role: 'user', content }, { role: 'assistant', content: data.reply }); $('message').value = ''; $('chat-status').textContent = 'One step at a time.';
-  } catch (error) { $('chat-status').textContent = error.message.startsWith('I couldn’t') || error.message.startsWith('Please') ? error.message : 'Couldn’t reach the AI. Please check your key in .env and your internet connection, then try again.'; }
+  } catch (error) { $('chat-status').textContent = error.fromServer ? error.message : 'Couldn’t reach the AI. Please check your key in .env and your internet connection, then try again.'; }
   finally { $('ask').disabled = false; $('ask').textContent = 'Ask AI ↗'; }
 });
 render();
