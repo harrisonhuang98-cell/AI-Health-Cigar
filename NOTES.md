@@ -56,7 +56,7 @@ The CDC link is included now as basic safety guidance. Other later features rema
 
 Vercel serves public/ and runs api/chat.js as /api/chat. Local startup calls that same handler. The function includes BRIEF.md and NOTES.md for instructions and model selection; those files are not public assets. .env stays Git-ignored and is explicitly excluded from Vercel uploads by .vercelignore. Never upload .env manually.
 Browser storage is unchanged. Online records are separate from localhost records and belong to each browser/profile and site URL; they do not sync across computers or preview URLs.
-No database, domain, extra API key, or additional environment setting is required. The 60-second function limit is configured in vercel.json; the upstream request times out after 45 seconds after a key-service request limited to 10 seconds.
+No database, domain, extra API key, or additional environment setting is required. The 60-second function limit is configured in vercel.json; each AI request times out after 18 seconds and each key lookup after 10 seconds, with at most one refresh on an OpenAI 401.
 For a limited student demo, consider Vercel Deployment Protection. The app has no user authentication or durable abuse limiter; same-origin validation is not authentication and public requests can incur OpenAI costs. Do not treat the former single-process busy flag as a serverless rate limit.
 Prepared for deployment, not deployed or tested on Vercel in this chat.
 Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/docs/project-configuration/vercel-json
@@ -76,4 +76,11 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - HTTPS is required and redirects are blocked to avoid forwarding credentials elsewhere. No extra Node packages are needed.
 - Online, set only KEYGEN_URL and KEYGEN_TOKEN in Vercel and redeploy. Keep Framework Preset Other, Node 24.x, repository root and the public output folder configured by the project. No additional environment variables are required.
 - Browser localStorage remains unchanged. Cache is per server process/function instance; it is not a shared database.
-- Tests use fictional credentials; no live MindDo/OpenAI call was made because .env now contains placeholders.
+- Automated tests use fictional credentials. Live MindDo/OpenAI model lookup and a real browser craving conversation were verified on November 19, 2026 using the privately configured .env.
+
+## MVP 1 check — November 19, 2026
+- Status: fully working locally. No application repair was needed.
+- Real browser test: confirmed the adult-support checkbox, described a fictional stressful-workday craving, and pressed Ask AI. Thinking… appeared with the button disabled. A real gpt-5.6-luna response suggested delaying the decision, water, a short walk and support. The input cleared and the button enabled again.
+- All five automated tests pass, including request validation, key expiry/cache, one-time invalid-key refresh and browser persistence. Existing journal and smoke-free date were left unchanged. .env remains Git-ignored; no credentials were printed.
+- Try it in two steps: (1) Run node --use-env-proxy server.mjs and open http://127.0.0.1:3000. (2) Confirm adult support, type a fictional craving such as wanting to smoke after a stressful day, and click Ask AI; wait for the coping idea.
+- This confirms the local craving-to-answer flow, not medical effectiveness or a deployed Vercel site.
