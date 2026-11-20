@@ -67,6 +67,7 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - localStorage implementation unchanged; persistence tests still pass.
 
 ## Server-only MindDo key service
+- Verified model lookup through getKey() on November 19, 2026: the available model containing “luna” is gpt-5.6-luna. No credentials were printed.
 - The AI key comes from getKey() in get-key.mjs. Only server code imports it.
 - Local .env contains KEYGEN_URL=paste-here and KEYGEN_TOKEN=paste-here. Replace these privately with your MindDo base URL and token. The template replaced the previous local values as requested; .env remains ignored by Git and Vercel.
 - getKey() sends POST to KEYGEN_URL + /api/lookup-key with Authorization: Bearer KEYGEN_TOKEN. It expects JSON with apiKey and expiresAt (ISO date, Unix seconds, or Unix milliseconds).
