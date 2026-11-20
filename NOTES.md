@@ -5,7 +5,7 @@ After each save point, push it to GitHub.
 ## Run
 One command: `node --use-env-proxy server.mjs`
 Open http://127.0.0.1:3000 in your browser. Node 24 or newer. No installation required.
-OpenAI model: gpt-5.6-luna. Local startup loads .env; online the API reads only the server environment variable OPENAI_API_KEY.
+OpenAI model: gpt-5.6-luna. Local startup loads .env; online getKey() reads only KEYGEN_URL and KEYGEN_TOKEN from the server environment.
 Saves on this computer only for now
 
 ## Done
@@ -50,13 +50,13 @@ The CDC link is included now as basic safety guidance. Other later features rema
 ## Put online with Vercel
 1. In Vercel, choose Add New Project and import the AI-Health-Cigar GitHub repository.
 2. Use the repository root and Framework Preset Other. vercel.json supplies the empty build command and public output folder; no install or build step is needed. Node 24.x is declared in package.json.
-3. Add OPENAI_API_KEY in Vercel Environment Variables for Production (and Preview if you want preview deployments to answer). Enter it only in Vercel, never in GitHub or browser code. No other environment variables are required.
+3. Add KEYGEN_URL and KEYGEN_TOKEN in Vercel Environment Variables for Production (and Preview if you want preview deployments to answer). Enter their values only in Vercel, never in GitHub or browser code. No other environment variables are required.
 4. Deploy. If you add or change the key afterward, redeploy so the function receives the new value.
 5. Open the deployed URL, confirm 18+, and ask a fictional craving question. Check logging and refresh on that URL as well.
 
 Vercel serves public/ and runs api/chat.js as /api/chat. Local startup calls that same handler. The function includes BRIEF.md and NOTES.md for instructions and model selection; those files are not public assets. .env stays Git-ignored and is explicitly excluded from Vercel uploads by .vercelignore. Never upload .env manually.
 Browser storage is unchanged. Online records are separate from localhost records and belong to each browser/profile and site URL; they do not sync across computers or preview URLs.
-No database, domain, extra API key, or additional environment setting is required. The 60-second function limit is configured in vercel.json; the upstream request times out after 55 seconds.
+No database, domain, extra API key, or additional environment setting is required. The 60-second function limit is configured in vercel.json; the upstream request times out after 45 seconds after a key-service request limited to 10 seconds.
 For a limited student demo, consider Vercel Deployment Protection. The app has no user authentication or durable abuse limiter; same-origin validation is not authentication and public requests can incur OpenAI costs. Do not treat the former single-process busy flag as a serverless rate limit.
 Prepared for deployment, not deployed or tested on Vercel in this chat.
 Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/docs/project-configuration/vercel-json
@@ -65,3 +65,12 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - Shared Vercel/local handler: three automated tests pass, including hosted-origin requests, server environment credentials, invalid input and friendly provider failures.
 - Updated local server: page HTTP 200, /.env HTTP 404, real AI coping response HTTP 200 using fictional input. No key printed.
 - localStorage implementation unchanged; persistence tests still pass.
+
+## Server-only key service
+- get-key.mjs exports getKey(). Each AI request retrieves its key on the server; there is no OPENAI_API_KEY fallback and no key is returned to the browser.
+- KEYGEN_URL must be a direct HTTPS endpoint accepting GET with Authorization: Bearer <KEYGEN_TOKEN>. Its JSON response must contain a nonempty key, apiKey or api_key string. Redirects are blocked to protect the token. Confirm this contract with your key-service provider.
+- Local startup loads the ignored .env; Vercel invokes api/chat.js without reading any .env file. Set KEYGEN_URL and KEYGEN_TOKEN in Vercel and redeploy after changes.
+- Vercel settings: repository root, Framework Preset Other, public output directory, Node 24.x. vercel.json and package.json declare these; leave build-command overrides empty. No additional environment variables, database or browser-storage migration are needed.
+- Browser saving remains localStorage; each browser and deployed site address has separate records.
+- Key-service failures return a generic message; provider response bodies, tokens and AI keys are never logged or sent to the browser.
+- Current verification: local page HTTP 200; /.env and /get-key.mjs HTTP 404. AI endpoint returns a friendly HTTP 502 because the configured key-service URL redirects to an HTML page on minddo.ai, not a JSON key response. With user approval, the destination was inspected without forwarding the token. A real AI answer is NOT verified. Update the ignored local .env and Vercel KEYGEN_URL with the actual direct key endpoint; confirm its authentication and response contract with the provider. Never paste the token or AI key into chat or GitHub.
