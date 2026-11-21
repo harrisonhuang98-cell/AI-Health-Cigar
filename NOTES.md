@@ -111,3 +111,10 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - All six automated tests pass, including simulated midnight/tab return, persistence, daylight-saving calculation, AI validation and key refresh. Syntax and whitespace checks pass.
 - Try in two steps: (1) Open http://127.0.0.1:3000 and choose your start date under Smoke-free since. (2) Click Save date; check the day count and refresh to see it remains saved.
 - Counts calendar days from a self-reported date, not completed 24-hour periods or medically verified abstinence. Records stay in this browser only.
+
+## Read AI replies aloud — November 20, 2026
+- AI replies now have a speaker / Listen button on the right. Click to read aloud; click Stop to stop. Starting another reply cancels the previous one. No automatic playback.
+- Built-in browser speech synthesis prefers a natural local English voice at rate 0.95. Voice quality depends on installed voices. Some browser voices use an online service; the page includes a notice. No new packages, keys or Vercel settings.
+- Unsupported browsers and playback failures leave replies readable. Page exit cancels speech. Web addresses are spoken as the linked resource.
+- Browser verified: real AI answer, Listen, reading state, Stop and idle. Subjective audio quality was not reviewed. Journal and day counter remained visible.
+- All seven automated tests pass, including voice selection, start/stop/failure/fallback, storage, day rollover, AI validation and key refresh.
