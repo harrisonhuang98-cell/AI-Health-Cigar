@@ -90,3 +90,11 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - It remains honest that it is AI, never claims personal addiction experience or a real friendship, and retains all existing health safety limits.
 - Verified with a real fictional setback/craving request: the answer was supportive and conversational, without a repeated AI introduction or routine treatment lecture. AI wording varies between replies.
 - All five automated tests and syntax checks pass. Browser saving, request validation, server-only credentials and bounded key refresh remain working.
+
+## MVP 2 check — November 20, 2026
+- Status: fully working locally; no application repair was needed.
+- Browser test: chose After a meal, kept intensity at 5/10, entered an explicitly fictional dinner-craving note and clicked Save craving. The page confirmed saving and displayed the trigger, intensity, timestamp and note in the journal.
+- Refreshed the page: the new record and earlier fictional entry remained. The existing smoke-free date was preserved. One fictional verification record remains in this browser; no real participant information was entered.
+- All five automated tests pass, including persistence, calendar-day calculation, AI request validation and key refresh. No application code or credential settings changed.
+- Try in two steps: (1) Open http://127.0.0.1:3000, find Log a craving, choose a trigger and intensity, and optionally type a short note. (2) Click Save craving, then refresh; confirm the entry remains in Craving journal.
+- Records stay in this browser/profile and site URL only; they do not sync to GitHub or other devices.
