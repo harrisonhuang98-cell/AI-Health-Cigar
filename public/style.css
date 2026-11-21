@@ -2,3 +2,4 @@
 
 
 .message.assistant{position:relative;padding-right:105px}.listen-button{position:absolute;right:10px;top:10px;padding:9px 10px;font-size:14px;background:#284f40;color:white}.speech-status{display:block;font-size:12px;line-height:1.5;margin-top:8px}.listen-button:disabled{cursor:default}@media(max-width:540px){.message.assistant{padding-right:18px;padding-top:52px}}
+.voice-picker{display:block;width:100%;margin-top:10px;padding:8px;font-size:14px;max-width:100%;white-space:normal}

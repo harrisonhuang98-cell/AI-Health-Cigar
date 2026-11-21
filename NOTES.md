@@ -118,3 +118,9 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - Unsupported browsers and playback failures leave replies readable. Page exit cancels speech. Web addresses are spoken as the linked resource.
 - Browser verified: real AI answer, Listen, reading state, Stop and idle. Subjective audio quality was not reviewed. Journal and day counter remained visible.
 - All seven automated tests pass, including voice selection, start/stop/failure/fallback, storage, day rollover, AI validation and key refresh.
+
+## Smoother voice choices
+- Automatic selection now prefers Natural/Neural/Enhanced/Premium voices, then Chrome Google voices, ahead of older desktop voices. Windows fallback prefers Zira. Speech uses normal rate 1.0 and pitch 1.0 instead of slowing the voice down.
+- Each reply has a Reading voice selector. Choose a voice and click Listen to compare; online and on-device options are labeled. Choices are for that reply only.
+- This browser currently exposes David, Mark and Zira only. These are Windows voices, not a new human-quality AI audio model. Installing/selecting richer browser voices may improve sound; subjective voice quality is not guaranteed or verified by automated checks.
+- Browser checked voice selection, read-aloud state and return to idle. All seven automated tests pass, including preference for natural voices over older local voices and manual selection. Existing saving and AI features remain unchanged.
