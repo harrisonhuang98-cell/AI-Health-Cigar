@@ -22,7 +22,16 @@ function render() {
     row.append(title, time, note); $('entries').append(row);
   }
 }
-const today = new Date(); $('quit-date').max = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+function refreshDayCount() {
+  const today = new Date();
+  $('quit-date').max = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  $('days').textContent = smokeFreeDays(state.quitDate, today);
+}
+refreshDayCount();
+// Update an open page across midnight and when returning from a sleeping tab.
+setInterval(refreshDayCount, 30000);
+window.addEventListener('focus', refreshDayCount);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshDayCount(); });
 $('date-form').addEventListener('submit', e => { e.preventDefault(); const date = $('quit-date').value; if (date > $('quit-date').max) { $('date-status').textContent = 'Choose today or an earlier date.'; return; } persist({ ...state, quitDate: date }, 'date-status'); });
 $('intensity').addEventListener('input', () => { $('strength').value = $('intensity').value; });
 $('log-form').addEventListener('submit', e => { e.preventDefault(); if (persist({ ...state, cravings: [...state.cravings, { id: crypto.randomUUID(), trigger: $('trigger').value, intensity: Number($('intensity').value), note: $('note').value.trim(), time: new Date().toISOString() }] }, 'log-status')) $('note').value = ''; });

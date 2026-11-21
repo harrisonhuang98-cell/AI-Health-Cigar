@@ -104,3 +104,10 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - The page highlights the first line in bold using safe text nodes; it does not render AI-provided HTML. Replies remain respectful and avoid unrelated facts, routine treatment lectures and unnecessary questions.
 - Real browser test returned a short after-dinner coping reply with the main action bold. Thinking… and disabled-button behavior worked; saved cravings and the smoke-free date remained visible.
 - All five automated tests, JavaScript syntax checks and whitespace checks pass. Browser persistence and server-only credential handling are unchanged.
+
+## MVP 3 check — November 20, 2026
+- Status: fully working after fixing an open-page rollover gap. The day count and latest allowed start date refresh every 30 seconds and when returning to the tab. Updates leave unfinished form entries alone and do not write storage.
+- Browser checks: November 17 showed 3 days on November 20 and persisted after refresh; today showed 0. A future date was blocked. Restored the original November 10 date (10 days); existing craving records were preserved.
+- All six automated tests pass, including simulated midnight/tab return, persistence, daylight-saving calculation, AI validation and key refresh. Syntax and whitespace checks pass.
+- Try in two steps: (1) Open http://127.0.0.1:3000 and choose your start date under Smoke-free since. (2) Click Save date; check the day count and refresh to see it remains saved.
+- Counts calendar days from a self-reported date, not completed 24-hour periods or medically verified abstinence. Records stay in this browser only.
