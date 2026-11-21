@@ -3,6 +3,38 @@ const $ = id => document.getElementById(id);
 let state = { cravings: [], quitDate: '' }, storageReady = true;
 try { state = loadState(); } catch { storageReady = false; $('storage-status').textContent = 'Saved data could not be read. Browser storage may be blocked or damaged. Your existing data has not been overwritten.'; }
 const messages = [];
+let activeSpeech;
+function addSpeaker(article, text) {
+  const button = document.createElement('button');
+  button.type = 'button'; button.className = 'listen-button';
+  const status = document.createElement('span'); status.className = 'speech-status'; status.setAttribute('role', 'status');
+  const reset = () => { button.textContent = '🔊 Listen'; button.setAttribute('aria-label', 'Read AI reply aloud'); button.setAttribute('aria-pressed', 'false'); };
+  reset();
+  if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
+    button.disabled = true; status.textContent = 'Read-aloud is unavailable in this browser.';
+  }
+  button.addEventListener('click', () => {
+    const wasActive = activeSpeech?.button === button;
+    window.speechSynthesis.cancel();
+    if (activeSpeech) { activeSpeech.reset(); activeSpeech = undefined; }
+    if (wasActive) { status.textContent = 'Stopped.'; return; }
+    const utterance = new window.SpeechSynthesisUtterance(text.replace(/https?:\/\/\S+/g, 'the linked resource'));
+    const voices = window.speechSynthesis.getVoices().filter(voice => /^en(?:-|$)/i.test(voice.lang));
+    // Prefer a natural-sounding local English voice; use the browser's English fallback.
+    const score = voice => (voice.localService ? 4 : 0) + (/natural|neural|enhanced|premium/i.test(voice.name) ? 3 : 0) + (voice.default ? 1 : 0);
+    voices.sort((a,b) => score(b) - score(a));
+    if (voices.length) utterance.voice = voices[0];
+    utterance.lang = utterance.voice?.lang || 'en-US'; utterance.rate = 0.95; utterance.pitch = 1; utterance.volume = 1;
+    const finish = () => { if (activeSpeech?.utterance === utterance) { reset(); activeSpeech = undefined; } };
+    utterance.onend = () => { finish(); status.textContent = ''; };
+    utterance.onerror = event => { finish(); if (!['canceled','interrupted'].includes(event.error)) status.textContent = 'Audio could not play. Check your browser voice and sound settings.'; };
+    button.textContent = '■ Stop'; button.setAttribute('aria-label', 'Stop reading AI reply'); button.setAttribute('aria-pressed', 'true');
+    status.textContent = 'Reading aloud.'; activeSpeech = { button, utterance, reset };
+    try { window.speechSynthesis.speak(utterance); } catch { finish(); status.textContent = 'Audio is unavailable. You can still read the reply.'; }
+  });
+  article.append(button, status);
+}
+window.addEventListener('pagehide', () => { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); });
 function persist(next, status) {
   if (!storageReady) { $(status).textContent = 'Saving is unavailable. Check browser storage settings.'; return false; }
   try { saveState(next); state = next; $(status).textContent = 'Saved on this computer.'; render(); return true; }
@@ -45,7 +77,9 @@ function bubble(role, text) {
     p.append(lead);
     if (split >= 0) p.append(document.createTextNode(text.slice(split)));
   } else p.textContent = text;
-  article.append(speaker, p); $('conversation').append(article); article.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  article.append(speaker, p);
+  if (role === 'assistant') addSpeaker(article, text);
+  $('conversation').append(article); article.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 }
 $('chat-form').addEventListener('submit', async e => {
   e.preventDefault(); if ($('ask').disabled) return;
