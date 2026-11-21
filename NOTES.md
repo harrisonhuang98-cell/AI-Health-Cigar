@@ -124,3 +124,9 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - Each reply has a Reading voice selector. Choose a voice and click Listen to compare; online and on-device options are labeled. Choices are for that reply only.
 - This browser currently exposes David, Mark and Zira only. These are Windows voices, not a new human-quality AI audio model. Installing/selecting richer browser voices may improve sound; subjective voice quality is not guaranteed or verified by automated checks.
 - Browser checked voice selection, read-aloud state and return to idle. All seven automated tests pass, including preference for natural voices over older local voices and manual selection. Existing saving and AI features remain unchanged.
+
+## More concise, encouraging spoken replies
+- Ordinary cravings now target 15–35 words in at most two sentences: one action first, then one brief reason. This replaces the previous 25–60 word preference.
+- Short complete sentences, contractions and ordinary punctuation support spoken delivery. No extra menus, unnecessary questions, repetition, slogans, pressure, guilt or exaggerated promises. Safety guidance and requested detail may exceed the default length.
+- Live fictional checks: ordinary craving reply 27 words; urgent chest-pain/breathing reply 27 words with emergency direction. Seven automated tests pass. Model outputs vary; these are spot checks.
+- This changes wording, not the installed browser voice. Existing voice selection, audio controls, browser saving and server credentials are unchanged.
