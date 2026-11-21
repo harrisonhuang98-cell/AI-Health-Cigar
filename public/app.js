@@ -26,7 +26,18 @@ const today = new Date(); $('quit-date').max = `${today.getFullYear()}-${String(
 $('date-form').addEventListener('submit', e => { e.preventDefault(); const date = $('quit-date').value; if (date > $('quit-date').max) { $('date-status').textContent = 'Choose today or an earlier date.'; return; } persist({ ...state, quitDate: date }, 'date-status'); });
 $('intensity').addEventListener('input', () => { $('strength').value = $('intensity').value; });
 $('log-form').addEventListener('submit', e => { e.preventDefault(); if (persist({ ...state, cravings: [...state.cravings, { id: crypto.randomUUID(), trigger: $('trigger').value, intensity: Number($('intensity').value), note: $('note').value.trim(), time: new Date().toISOString() }] }, 'log-status')) $('note').value = ''; });
-function bubble(role, text) { const article = document.createElement('article'); article.className = `message ${role}`; const speaker = document.createElement('span'); speaker.className = 'speaker'; speaker.textContent = role === 'user' ? 'YOU' : 'AI COMPANION'; const p = document.createElement('p'); p.textContent = text; article.append(speaker, p); $('conversation').append(article); article.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+function bubble(role, text) {
+  const article = document.createElement('article'); article.className = `message ${role}`;
+  const speaker = document.createElement('span'); speaker.className = 'speaker'; speaker.textContent = role === 'user' ? 'YOU' : 'AI COMPANION';
+  const p = document.createElement('p');
+  if (role === 'assistant') {
+    const split = text.indexOf('\n');
+    const lead = document.createElement('strong'); lead.textContent = split < 0 ? text : text.slice(0, split);
+    p.append(lead);
+    if (split >= 0) p.append(document.createTextNode(text.slice(split)));
+  } else p.textContent = text;
+  article.append(speaker, p); $('conversation').append(article); article.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
 $('chat-form').addEventListener('submit', async e => {
   e.preventDefault(); if ($('ask').disabled) return;
   const content = $('message').value.trim(); if (!content) return;

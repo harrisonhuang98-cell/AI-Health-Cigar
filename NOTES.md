@@ -98,3 +98,9 @@ Docs: https://vercel.com/docs/functions/runtimes/node-js and https://vercel.com/
 - All five automated tests pass, including persistence, calendar-day calculation, AI request validation and key refresh. No application code or credential settings changed.
 - Try in two steps: (1) Open http://127.0.0.1:3000, find Log a craving, choose a trigger and intensity, and optionally type a short note. (2) Click Save craving, then refresh; confirm the entry remains in Craving journal.
 - Records stay in this browser/profile and site URL only; they do not sync to GitHub or other devices.
+
+## Short, focused AI replies — November 20, 2026
+- Ordinary craving replies now aim for 25–60 words, with the main action first and a short explanation. This supersedes the earlier 80–150 word preference. Extra detail is reserved for user requests or essential safety guidance.
+- The page highlights the first line in bold using safe text nodes; it does not render AI-provided HTML. Replies remain respectful and avoid unrelated facts, routine treatment lectures and unnecessary questions.
+- Real browser test returned a short after-dinner coping reply with the main action bold. Thinking… and disabled-button behavior worked; saved cravings and the smoke-free date remained visible.
+- All five automated tests, JavaScript syntax checks and whitespace checks pass. Browser persistence and server-only credential handling are unchanged.
